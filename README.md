@@ -1,9 +1,43 @@
-# RK3399
+# rk3399-linux-sdk
 
+## About
 
-> linux-SDK: RK3399_LINUX_SDK_RELEASE_V2.5.1_20201203
+RockChip RK3399 Linux SDK (RK3399_LINUX_SDK_RELEASE_V2.5.1_20201203).
 
-- 2022/07/30 `repo sync -c --no-tags`
+## Build Images
 
-![RK_Linux_SDK_Supported_System_Kernel_Version_and_ISP_Version_List](https://user-images.githubusercontent.com/26021085/182084996-c878c96a-979e-47fc-b135-693f4d3f8b35.png)
+Install and run [Ubuntu 20.04 LTS](https://mirrors.ustc.edu.cn/ubuntu-releases/20.04.6/ubuntu-20.04.6-desktop-amd64.iso), upgrade whole system.
 
+```shell
+sudo apt update
+sudo apt upgrade
+sudo reboot
+```
+
+Clone this repo.
+
+```shell
+git clone https://github.com/Arondight/rk3399-linux-sdk.git
+cd ./rk3399-linux-sdk/
+```
+
+Install extra build requires.
+
+```shell
+sudo apt install python
+sudo apt install ./debian/ubuntu-build-service/packages/live-build_3.0.5-1linaro1_all.deb
+```
+
+Read documention [Rockchip RK3399 Linux SDK Quick Start](docs/Rockchip_RK3399_Quick_Start_Linux_EN.pdf) to build images.
+
+> <details>
+>   <summary>
+>     For a successful build you may need to set up a proxy to download packages from GitHub (or other sites).
+>   </summary>
+>
+> ```shell
+> export http_proxy='http://localhost:10809'
+> export https_proxy="$http_proxy"
+> ```
+>
+> </details>

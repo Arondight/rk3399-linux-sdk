@@ -601,6 +601,8 @@ function build_uboot(){
 		./make.sh --idblock --spl
 	fi
 
+	test -d $TOP_DIR/rockdev/ || mkdir -p $TOP_DIR/rockdev/
+
 	if [ "$RK_RAMDISK_SECURITY_BOOTUP" = "true" ];then
 		ln -rsf $TOP_DIR/u-boot/boot.img $TOP_DIR/rockdev/
 		test -z "${RK_PACKAGE_FILE_AB}" && \
@@ -727,6 +729,8 @@ function build_ramboot(){
 
 	/usr/bin/time -f "you take %E to build ramboot" \
 		$COMMON_DIR/mk-ramdisk.sh ramboot.img $RK_CFG_RAMBOOT
+
+	test -d rockdev/ || mkdir -p rockdev/
 
 	ln -rsf buildroot/output/$RK_CFG_RAMBOOT/images/ramboot.img \
 		rockdev/boot.img
@@ -857,6 +861,8 @@ function build_recovery(){
 
 	/usr/bin/time -f "you take %E to build recovery" \
 		$COMMON_DIR/mk-ramdisk.sh recovery.img $RK_CFG_RECOVERY
+
+	test -d rockdev/ || mkdir -p rockdev/
 
 	ln -rsf buildroot/output/$RK_CFG_RECOVERY/images/recovery.img \
 		rockdev/recovery.img
@@ -1058,8 +1064,14 @@ function build_firmware(){
 function build_updateimg(){
 	IMAGE_PATH=$TOP_DIR/rockdev
 	PACK_TOOL_DIR=$TOP_DIR/tools/linux/Linux_Pack_Firmware
+	BOARD_NAME=${RK_CFG_BUILDROOT//rockchip_}
 
+	test -d $IMAGE_PATH || mkdir -p $IMAGE_PATH
 	cd $PACK_TOOL_DIR/rockdev
+
+	ln -sf ${BOARD_NAME}-mkupdate.sh mkupdate.sh
+	ln -sf ${BOARD_NAME}-package-file package-file
+	export PATH="$PATH:$PACK_TOOL_DIR"
 
 	if [ -f "$RK_PACKAGE_FILE_AB" ]; then
 		build_sdcard_package
@@ -1094,6 +1106,7 @@ function build_otapackage(){
 	PACK_TOOL_DIR=$TOP_DIR/tools/linux/Linux_Pack_Firmware
 
 	echo "Make ota ab update_ota.img"
+	test -d $IMAGE_PATH || mkdir -p $IMAGE_PATH
 	cd $PACK_TOOL_DIR/rockdev
 	if [ -f "$RK_PACKAGE_FILE_OTA" ]; then
 		source_package_file_name=`ls -lh $PACK_TOOL_DIR/rockdev/package-file | awk -F ' ' '{print $NF}'`
@@ -1118,6 +1131,8 @@ function build_sdcard_package(){
 	local sdupdate_ab_misc_img=$TOP_DIR/device/rockchip/rockimg/$rk_sdupdate_ab_misc
 	local parameter_sdupdate=$TOP_DIR/device/rockchip/rockimg/$rk_parameter_sdupdate
 	local recovery_img=$TOP_DIR/buildroot/output/$RK_UPDATE_SDCARD_CFG_RECOVERY/images/recovery.img
+
+	test -d $image_path || mkdir -p $image_path
 
 	if [ $RK_UPDATE_SDCARD_CFG_RECOVERY ]; then
 		if [ -f $recovery_img ]; then
@@ -1168,12 +1183,15 @@ function build_save(){
 	export STUB_PATCH_PATH=$STUB_PATH/PATCHES
 	mkdir -p $STUB_PATH
 
+	test -d $IMAGE_PATH || mkdir -p $IMAGE_PATH
+
 	#Generate patches
-	.repo/repo/repo forall -c \
-		"$TOP_DIR/device/rockchip/common/gen_patches_body.sh"
+	#.repo/repo/repo forall -c \
+	#	"$TOP_DIR/device/rockchip/common/gen_patches_body.sh"
+	./device/rockchip/common/gen_patches_body.sh
 
 	#Copy stubs
-	.repo/repo/repo manifest -r -o $STUB_PATH/manifest_${DATE}.xml
+	#.repo/repo/repo manifest -r -o $STUB_PATH/manifest_${DATE}.xml
 	mkdir -p $STUB_PATCH_PATH/kernel
 	cp kernel/.config $STUB_PATCH_PATH/kernel
 	cp kernel/vmlinux $STUB_PATCH_PATH/kernel

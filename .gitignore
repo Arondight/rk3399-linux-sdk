@@ -1,1 +1,8 @@
 rockdev/
+.rootfs/
+debian/
+IMAGE/
+
+br.log
+tools/linux/Linux_Pack_Firmware/rockdev/mkupdate.sh
+tools/linux/Linux_Pack_Firmware/rockdev/package-file

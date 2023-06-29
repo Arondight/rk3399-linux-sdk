@@ -28,7 +28,7 @@ sudo apt install python
 sudo apt install ./debian/ubuntu-build-service/packages/live-build_3.0.5-1linaro1_all.deb
 ```
 
-Read documention [Rockchip RK3399 Linux SDK Quick Start](docs/Rockchip_RK3399_Quick_Start_Linux_EN.pdf) to build images.
+Read documention [Rockchip RK3399 Linux SDK Quick Start](docs/Rockchip_RK3399_Quick_Start_Linux_EN.pdf) to build images, and find these images in `./IMAGE/*/IMAGES/`.
 
 > <details>
 >   <summary>
